@@ -190,6 +190,8 @@ const handleCallClick = async (event, property) => {
     setProperties(propertiesWithDefaults);
     setFilteredProperties(propertiesWithDefaults);
     setTotalItems(data.totalElements || 0); // Optional: You can also recalculate this using activeProperties.length if needed
+    // setTotalItems(activeProperties.length); // replace totalElements
+
     setTotalPages(data.totalPages || 0);
   } catch (error) {
     console.error(
@@ -388,7 +390,8 @@ const handleCallClick = async (event, property) => {
           Property Listings
         </h1>
         <p className="text-slate-600 text-sm mt-1">
-          {filteredProperties.length} properties available
+          {totalItems} properties available
+
         </p>
       </div>
 

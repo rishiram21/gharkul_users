@@ -108,7 +108,7 @@ import Propertydetails from './subpages/Propertydetails';
 import Subscription from './pages/Subscription';
 import UserProfile from './pages/UserProfile';
 import CheckoutPage from './pages/CheckoutPage';
-import PrivacyPolicy from './pages/PrivacyPolicy';
+// import PrivacyPolicy from './pages/PrivacyPolicy';
 import RazorpayPage from './components/RazorpayPage';
 import FeaturedRequirement from './pages/FeaturedRequirement';
 import Editproperty from './subpages/Editproperty';
@@ -139,7 +139,7 @@ const AppContent = () => {
           <Route path="/razorpay" element={<RazorpayPage />} />
           <Route path="/about" element={<Aboutus />} />
           <Route path="/contact" element={<Contactus />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
+          {/* <Route path="/privacy" element={<PrivacyPolicy />} /> */}
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
 

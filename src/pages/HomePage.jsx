@@ -213,7 +213,7 @@ useEffect(() => {
   const fetchProperties = async () => {
     try {
       const page = 0;  // first page
-      const size = 20; // fetch up to 20 to safely get enough RENT and SELL
+      const size = 100; // fetch up to 20 to safely get enough RENT and SELL
       const sort = 'propertyId';
       const direction = 'asc';
 
@@ -540,12 +540,13 @@ useEffect(() => {
                     </div> */}
                     
                     <h2 className="text-xl md:text-2xl font-bold text-gray-800 capitalize leading-tight">
-                      {req.propertyType} for {req.lookingFor}
+                      {/* {req.propertyType} for {req.lookingFor} */}
+                      Looking For
                     </h2>
                     
                     <div className="flex flex-col sm:flex-row gap-2 justify-center items-center text-sm font-medium">
                       <span className="bg-gray-100/80 text-gray-700 px-3 py-1.5 rounded-full">
-                        Looking For {req.bhkConfig} 
+                         {req.bhkConfig} 
                       </span>
                       <span className="bg-green-100/80 text-green-700 px-3 py-1.5 rounded-full font-semibold">
                         ₹{req.minBudget.toLocaleString()} - ₹{req.maxBudget.toLocaleString()}

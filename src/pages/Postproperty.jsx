@@ -11,6 +11,9 @@
     const pinCodeRegex = /^[1-9][0-9]{0,5}$/; // allow partial match while typing
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const [page, setPage] = useState(0);
+    const [size, setSize] = useState(10000);
+    const [totalPages, setTotalPages] = useState(0);
 
     const formatIndianNumber = (value) => {
     const num = parseFloat(value);
@@ -112,21 +115,39 @@
     const [amenities, setAmenities] = useState({});
     const [selectedAmenities, setSelectedAmenities] = useState([]);
 
-    useEffect(() => {
-      const fetchAmenities = async () => {
-        try {
-          const response = await fetch(
-            `${import.meta.env.VITE_BASE_URL}/api/amenities/get`
-          );
-          const data = await response.json();
-          setAmenities(data);
-        } catch (error) {
-          console.error("Error fetching amenities:", error);
-        }
-      };
+    // useEffect(() => {
+    //   const fetchAmenities = async () => {
+    //     try {
+    //       const response = await fetch(
+    //         `${import.meta.env.VITE_BASE_URL}/api/amenities/get`
+    //       );
+    //       const data = await response.json();
+    //       setAmenities(data);
+    //     } catch (error) {
+    //       console.error("Error fetching amenities:", error);
+    //     }
+    //   };
 
-      fetchAmenities();
-    }, []);
+    //   fetchAmenities();
+    // }, []);
+
+    useEffect(() => {
+  const fetchAmenities = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/api/amenities/get?page=${page}&size=${size}`
+      );
+      const data = await response.json();
+      setAmenities(data.content);       // data.content holds the list
+      setTotalPages(data.totalPages);   // to support pagination UI
+    } catch (error) {
+      console.error("Error fetching amenities:", error);
+    }
+  };
+
+  fetchAmenities();
+}, [page, size]); // Depend on page or size to refetch
+
 
     const handleAmenityChange = (amenityId) => {
       setSelectedAmenities((prevState) =>
@@ -1292,6 +1313,14 @@ const handleSubmit = async (e) => {
           {/* Commercial */}
           {propertyType === "COMMERCIAL" && (
             <>
+
+            <input
+                  type="text"
+                  placeholder="Property Name"
+                  className="w-full p-3 border border-gray-300 rounded-xl mb-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                  value={propertyName}
+                  onChange={(e) => setPropertyName(e.target.value)}
+                />
               <div className="flex flex-wrap gap-2 mb-3">
                 {[
                   "Office Space",
@@ -1338,19 +1367,9 @@ const handleSubmit = async (e) => {
                 ))}
               </div>
 
-              <select
-                className="w-full p-3 border border-gray-300 rounded-xl mb-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                value={propertyAge}
-                onChange={(e) => setPropertyAge(e.target.value)}
-              >
-                <option value="">Age of Property</option>
-                <option value="<1">Less than 1 year</option>
-                <option value="3-5">3 to 5 years</option>
-                <option value="5-10">5 to 10 years</option>
-                <option value=">10">More than 10 years</option>
-              </select>
+              
 
-              <div className="flex space-x-3 mb-3">
+              {/* <div className="flex space-x-3 mb-3">
                 <select
                   className="w-1/2 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                   value={floor}
@@ -1375,7 +1394,77 @@ const handleSubmit = async (e) => {
                   <option value="Full Building">Full Building</option>
                   <option value="Partial">Partial</option>
                 </select>
-              </div>
+              </div> */}
+              <div className="flex space-x-3 mb-3">
+
+              {/* <select
+                className="w-1/3 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                value={propertyAge}
+                onChange={(e) => setPropertyAge(e.target.value)}
+              >
+                <option value="">Age of Property</option>
+                <option value="<1">Less than 1 year</option>
+                <option value="3-5">3 to 5 years</option>
+                <option value="5-10">5 to 10 years</option>
+                <option value=">10">More than 10 years</option>
+              </select> */}
+
+              <input
+  type="number"
+  className="w-1/3 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+  placeholder="Age of Property (in years)"
+  value={propertyAge}
+  onChange={(e) => setPropertyAge(e.target.value)}
+  min={1}
+/>
+
+              <input
+    type="number"
+    className="w-1/3 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+    placeholder="No of Building floors"
+    value={totalFloor}
+    onChange={(e) => setTotalFloor(e.target.value)}
+    min={1}
+  />
+
+
+ <input
+    type="number"
+    className="w-1/3 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+    placeholder="Floor"
+    value={floor}
+    onChange={(e) => {
+      const val = parseInt(e.target.value, 10);
+      if (!isNaN(val) && val <= totalFloor) {
+        setFloor(val);
+      }
+    }}
+    min={0}
+  />
+</div>
+               <div className="flex space-x-3 mb-3">
+              
+    <input
+      type="text"
+      placeholder="Built-up Area (sq.ft)"
+      className="w-1/2 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+      value={builtUpArea}
+      onChange={(e) => setBuiltUpArea(e.target.value)}
+    />
+<input
+    type="text"
+    placeholder="Carpet Area (sq.ft)"
+    className="w-1/2 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+    value={carpetArea}
+    onChange={(e) => {
+      const val = e.target.value;
+      if (!isNaN(val) && parseFloat(val) < parseFloat(builtUpArea)) {
+        setCarpetArea(val);
+      }
+    }}
+  />
+  
+</div>
             </>
           )}
 
@@ -1782,13 +1871,25 @@ const handleSubmit = async (e) => {
                 />
               </div>
 
-              <input
+              {/* <input
                 type="date"
                 placeholder="Available From"
                 className="w-full p-3 border border-gray-300 rounded-xl mb-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                 value={availableFrom}
                 onChange={(e) => setAvailableFrom(e.target.value)}
-              />
+              /> */}
+
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+    Available From
+  </label>
+  <input
+    type="date"
+    placeholder="Available From"
+    className="w-full p-3 border border-gray-300 rounded-xl mb-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+    value={availableFrom}
+    onChange={(e) => setAvailableFrom(e.target.value)}
+    min={new Date().toISOString().split("T")[0]} // this disables past dates
+  />
             </>
           )}
 
