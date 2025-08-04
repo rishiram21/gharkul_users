@@ -1256,7 +1256,7 @@ const Listing = () => {
             </div>
 
             {/* Search Input */}
-            <div className="w-full max-w-md">
+            {/* <div className="w-full max-w-md">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 w-5 h-5 z-10" />
                 <input
@@ -1267,7 +1267,7 @@ const Listing = () => {
                   onChange={(e) => handleFilterChange('searchTerm', e.target.value)}
                 />
               </div>
-            </div>
+            </div> */}
 
           </div>
         </div>
