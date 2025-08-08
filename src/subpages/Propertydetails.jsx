@@ -32,7 +32,7 @@ import {
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { Navigation } from 'swiper/modules';
+import { Autoplay, Navigation } from 'swiper/modules';
 import { AuthContext } from "../context/Authcontext";
 import { toast } from "react-toastify";
 
@@ -358,11 +358,14 @@ const handleCallClick = async (event) => {
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
               <Swiper
-                modules={[Navigation]}
-                navigation
+                modules={[Navigation,Autoplay]}
                 spaceBetween={10}
                 slidesPerView={1}
                 loop={true}
+                autoplay={{
+        delay: 3000, // time between slides (in ms)
+        disableOnInteraction: false, // keeps autoplay running after user interaction
+      }}
                 className="rounded-xl shadow-md"
               >
                 {galleryImages.map((img, index) => (
@@ -375,7 +378,9 @@ const handleCallClick = async (event) => {
                       />
                     </div>
                   </SwiperSlide>
+                  
                 ))}
+                
               </Swiper>
               <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-lg flex items-center space-x-1">
                 <Camera className="w-4 h-4" />
@@ -568,14 +573,24 @@ const handleCallClick = async (event) => {
   Contact Owner
 </button> */}
 
-<button
+{/* <button
   onClick={handleCallClick}
   className="w-full mt-4 bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center"
 >
   <Phone className="mr-2" />
   Contact Owner
-</button>
+</button> */}
 
+
+ <button
+    onClick={handleCallClick}
+    className="w-full bg-indigo-600 text-white py-3 rounded-none md:rounded-lg font-semibold 
+               hover:bg-indigo-700 transition-colors flex items-center justify-center
+               fixed bottom-0 left-0 md:static z-50 md:w-auto"
+  >
+    <Phone className="mr-2" />
+    Contact Owner
+  </button>
 
             </div>
           </div>

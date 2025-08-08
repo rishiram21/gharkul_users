@@ -21,7 +21,6 @@ const FeaturedRequirement = () => {
     bhkConfig: '',
     preferredLocations: [],
   });
-
   const [enums, setEnums] = useState({
     propertyFor: [],
     apartmentType: [],
@@ -51,6 +50,50 @@ const FeaturedRequirement = () => {
       alert("Please log in to make a call or message.");
     }
   };
+
+  const handleContactClick = async (event, requirement, type) => {
+  event.preventDefault();
+
+  if (!user) {
+    toast.error("You must be logged in to contact.");
+    return;
+  }
+
+  if (!requirement?.requirementId) {
+    toast.error("Invalid requirement data.");
+    console.error("Requirement object missing requirementId:", requirement);
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/api/requirement/use-contact`,
+      null,
+      {
+        params: {
+          userId: user.id,
+          requirementId: requirement.requirementId,
+        },
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+
+    toast.success(response.data.message);
+
+    // After backend success, trigger contact action
+    if (type === "call") {
+      window.location.href = `tel:${requirement.phoneNumber}`;
+    } else if (type === "whatsapp") {
+      window.open(`https://wa.me/${requirement.phoneNumber}`, "_blank");
+    }
+
+  } catch (error) {
+    const errorMsg = error?.response?.data?.message || "Unable to use contact.";
+    toast.error(errorMsg);
+  }
+};
 
   const fetchRequirements = async () => {
     setLoading(true);
@@ -244,7 +287,7 @@ const FeaturedRequirement = () => {
                       <td className="px-2 py-4">{requirement.additionalRequirements}</td>
                       <td className="px-2 py-4">
                         <div className="flex gap-2">
-                          <a
+                          {/* <a
                             href={user ? `tel:${requirement.phoneNumber}` : "#"}
                             onClick={handleClick}
                             className={`inline-flex items-center gap-1 ${
@@ -254,8 +297,24 @@ const FeaturedRequirement = () => {
                             }`}
                           >
                             <Phone size={14} /> Call
-                          </a>
+                          </a> */}
+
                           <a
+                                                href={user ? `tel:${requirement.phoneNumber}` : "#"}
+                                                onClick={(e) => handleContactClick(e, req, "call")}
+                                                className={`group inline-flex items-center justify-center gap-1.5 sm:gap-2 ${
+                                                  user ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 cursor-pointer shadow-md sm:shadow-lg hover:shadow-lg sm:hover:shadow-xl" : "bg-gray-400 cursor-not-allowed shadow-sm sm:shadow-md"
+                                                } text-white text-xs sm:text-sm font-semibold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl transition-all duration-300 ${
+                                                  user ? "hover:scale-105 active:scale-95" : ""
+                                                } flex-1 xs:flex-none min-w-0`}
+                                              >
+                                                <Phone size={14} className={`sm:w-4 sm:h-4 lg:w-5 lg:h-5 ${user ? "group-hover:animate-pulse" : ""} flex-shrink-0`} />
+                                                <span className="truncate">Call Now</span>
+                                              </a>
+                          
+
+
+                          {/* <a
                             href={user ? `https://wa.me/${requirement.phoneNumber}` : "#"}
                             onClick={handleClick}
                             target="_blank"
@@ -267,7 +326,24 @@ const FeaturedRequirement = () => {
                             }`}
                           >
                             <MessageCircle size={14} /> WhatsApp
-                          </a>
+                          </a> */}
+
+
+                          <a
+                                                href={user ? `https://wa.me/${requirement.phoneNumber}` : "#"}
+                                                onClick={(e) => handleContactClick(e, req, "whatsapp")}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={`group inline-flex items-center justify-center gap-1.5 sm:gap-2 ${
+                                                  user ? "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-md sm:shadow-lg hover:shadow-lg sm:hover:shadow-xl" : "bg-gray-400 cursor-not-allowed shadow-sm sm:shadow-md"
+                                                } text-white text-xs sm:text-sm font-semibold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl transition-all duration-300 ${
+                                                  user ? "hover:scale-105 active:scale-95" : ""
+                                                } flex-1 xs:flex-none min-w-0`}
+                                              >
+                                                <MessageCircle size={14} className={`sm:w-4 sm:h-4 lg:w-5 lg:h-5 ${user ? "group-hover:animate-bounce" : ""} flex-shrink-0`} />
+                                                <span className="truncate">WhatsApp</span>
+                                              </a>
+
                         </div>
                       </td>
                     </tr>
