@@ -1240,7 +1240,7 @@ const Listing = () => {
       </div>
 
       {/* Top Navigation Bar (Sticky) */}
-      <div className="fixed w-full mt-16 top-0 z-50 bg-white/80 backdrop-blur-xl shadow-sm border-b border-white/30">
+      <div className="fixed w-full mt-16 top-0 z-30 bg-white/80 backdrop-blur-xl shadow-sm border-b border-white/30">
         <div className="max-w-full mx-auto px-6 lg:px-8 py-4">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             
